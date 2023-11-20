@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaft.org">
+<html lang="en" xmlns:th="http://www.thymeleaft.org" xmlns:sec="http://www.thymeleaf.org">
 <head th:insert="fragments/resources :: headResources('Pizza Show')"></head>
 <body>
 <div class="container" th:object="${pizza}" style="background-color: white; padding: 20px; margin: 30px auto;">
@@ -30,7 +30,7 @@
 
     <div style="margin-bottom: 30px;">
         <h2>Offerte</h2>
-        <a th:href="@{/offers/create(pizzaId=*{id})}">
+        <a th:href="@{/offers/create(pizzaId=*{id})}" sec:authorize="hasAuthority('ADMIN')">
             <i class="fa-solid fa-circle-plus"
                style="font-size: 15px; width: fit-content; background-color: white; color: #0d6efd;">
                 Crea nuova offerta speciale</i>

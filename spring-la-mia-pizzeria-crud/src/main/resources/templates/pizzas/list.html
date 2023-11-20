@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaft.org">
+<html lang="en" xmlns:th="http://www.thymeleaft.org" xmlns:sec="http://www.thymeleaf.org">
 <head th:insert="fragments/resources :: headResources('Pizza List')"></head>
 <body>
 <nav th:replace="fragments/navbar :: topNavbar('pizzas')"></nav>
@@ -8,10 +8,11 @@
         <span th:text="${message}"></span>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-    <h1>Pizza List</h1>
+    <h1>Lista Pizze</h1>
     <div class="d-flex align-items-center justify-content-between">
         <div class="my-3">
-            <a th:href="@{/pizzas/create}" class="btn btn-primary">Crea nuova pizza</a>
+            <a th:href="@{/pizzas/create}" class="btn btn-primary" sec:authorize="hasAuthority('ADMIN')">Crea nuova
+                pizza</a>
         </div>
         <form th:action="@{/pizzas}" method="GET">
             <div class="input-group">
@@ -30,7 +31,7 @@
         <h2>Nessuna pizza presente in lista.</h2>
     </div>
 
-    <table class="table" th:if="${not pizzaList.empty}">
+    <table class="table" th:if="${not pizzaList.empty}" style="margin-top: 20px;">
         <thead>
         <th></th>
         <th>Prezzo</th>
@@ -40,22 +41,29 @@
         </thead>
         <tbody>
         <tr th:each="pizza : ${pizzaList}" style="vertical-align: middle;">
-            <td class="d-flex flex-column">
-                <a th:href="@{/pizzas/show/{id}(id=${pizza.id})}" class="pulsante_pizza">
-                    <i class="fa-solid fa-pizza-slice"></i>
-                    Visualizza
-                </a>
-                <a th:href="@{/pizzas/edit/{id}(id=${pizza.id})}" class="pulsante_pizza">
-                    <i class="fa-solid fa-pen"></i>
-                    Modifica
-                </a>
-                <form method="POST" th:action="@{/pizzas/delete/{id}(id=${pizza.id})}"
-                      onsubmit="return confirm('Sei sicuro?')">
-                    <button type="submit" id="pulsante_elimina" class="pulsante_pizza">
-                        <i class="fa-solid fa-trash"></i>
-                        Elimina
-                    </button>
-                </form>
+            <td>
+                <div>
+                    <a th:href="@{/pizzas/show/{id}(id=${pizza.id})}" class="pulsante_pizza">
+                        <i class="fa-solid fa-pizza-slice"></i>
+                        Visualizza
+                    </a>
+                </div>
+                <div>
+                    <a th:href="@{/pizzas/edit/{id}(id=${pizza.id})}" class="pulsante_pizza"
+                       sec:authorize="hasAuthority('ADMIN')">
+                        <i class="fa-solid fa-pen"></i>
+                        Modifica
+                    </a>
+                </div>
+                <div>
+                    <form method="POST" th:action="@{/pizzas/delete/{id}(id=${pizza.id})}"
+                          onsubmit="return confirm('Sei sicuro?')" sec:authorize="hasAuthority('ADMIN')">
+                        <button type="submit" id="pulsante_elimina" class="pulsante_pizza">
+                            <i class="fa-solid fa-trash"></i>
+                            Elimina
+                        </button>
+                    </form>
+                </div>
             </td>
             <td th:text="|€${pizza.price}|"></td>
             <td>
